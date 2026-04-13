@@ -37,7 +37,12 @@ export default function QuickCheckIn({ friend }) {
       timestamp: now.getTime(),
     });
 
-    setToastMessage(`Logged ${type} with ${friend.name}`);
+    let toastMsg = "";
+    if (type === "Call") toastMsg = `Called ${friend.name}`;
+    else if (type === "Text") toastMsg = `Texted ${friend.name}`;
+    else if (type === "Video") toastMsg = `Video called ${friend.name}`;
+
+    setToastMessage(toastMsg);
     setTimeout(() => setToastMessage(""), 3000);
   };
 
