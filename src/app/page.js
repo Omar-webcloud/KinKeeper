@@ -16,8 +16,8 @@ export default function Home() {
   const interactionsThisMonth = friends.filter((friend) => friend.days_since_contact <= 14).length * 2;
 
   return (
-    <main className="min-h-screen bg-[#f6f8f8] px-12 pt-3.5">
-      <div className="mx-auto flex w-full max-w-5xl items-center justify-between">
+    <main className="min-h-screen bg-[#f6f8f8] px-4 pt-4 md:px-12 md:pt-3.5">
+      <div className="mx-auto flex w-full max-w-5xl flex-col items-center justify-between gap-4 sm:flex-row sm:gap-0">
         <Image src="/logo.png" alt="KeenKeeper logo" width={141} height={32} priority />
 
         <nav className="flex items-center gap-0.5 rounded-[10px] border border-[#e4e7ec] bg-white p-1 shadow-[0_1px_2px_rgba(16,24,40,0.05)]">
@@ -45,7 +45,7 @@ export default function Home() {
         </nav>
       </div>
 
-      <section className="mx-auto mt-14 max-w-5xl rounded-[26px] bg-white px-8 py-12 shadow-[0_18px_70px_rgba(15,23,42,0.08)]">
+      <section className="mx-auto mt-8 max-w-5xl rounded-[26px] bg-white px-5 py-8 shadow-[0_18px_70px_rgba(15,23,42,0.08)] sm:mt-14 sm:px-8 sm:py-12">
         <div className="text-center">
           <p className="text-sm uppercase tracking-[0.32em] text-[#2f5346]">KeenKeeper</p>
           <h1 className="mt-4 text-4xl font-semibold text-[#111827] sm:text-5xl">Friends to keep close in your life</h1>
