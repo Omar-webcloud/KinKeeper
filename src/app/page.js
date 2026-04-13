@@ -1,10 +1,22 @@
 import Image from "next/image";
 import { ChartNoAxesColumn, Clock3, House, Plus } from "lucide-react";
+import friends from "../data/friends.json";
+
+const statusStyles = {
+  overdue: "bg-[#fef2f2] text-[#b91c1c]",
+  "almost due": "bg-[#fef7ed] text-[#b45309]",
+  "on-track": "bg-[#ecfdf5] text-[#166534]",
+};
 
 export default function Home() {
+  const totalFriends = friends.length;
+  const onTrack = friends.filter((friend) => friend.status === "on-track").length;
+  const needAttention = friends.filter((friend) => friend.status !== "on-track").length;
+  const interactionsThisMonth = friends.filter((friend) => friend.days_since_contact <= 14).length * 2;
+
   return (
     <main className="min-h-screen bg-[#f6f8f8] px-12 pt-3.5">
-      <div className="mx-auto flex w-full max-w-[1024px] items-center justify-between">
+      <div className="mx-auto flex w-full max-w-5xl items-center justify-between">
         <Image src="/logo.png" alt="KeenKeeper logo" width={141} height={32} priority />
 
         <nav className="flex items-center gap-0.5 rounded-[10px] border border-[#e4e7ec] bg-white p-1 shadow-[0_1px_2px_rgba(16,24,40,0.05)]">
@@ -32,11 +44,11 @@ export default function Home() {
         </nav>
       </div>
 
-      <section className="mx-auto mt-14 max-w-[1024px] rounded-[26px] bg-white px-8 py-12 shadow-[0_18px_70px_rgba(15,23,42,0.08)]">
+      <section className="mx-auto mt-14 max-w-5xl rounded-[26px] bg-white px-8 py-12 shadow-[0_18px_70px_rgba(15,23,42,0.08)]">
         <div className="text-center">
           <p className="text-sm uppercase tracking-[0.32em] text-[#2f5346]">KeenKeeper</p>
           <h1 className="mt-4 text-4xl font-semibold text-[#111827] sm:text-5xl">Friends to keep close in your life</h1>
-          <p className="mx-auto mt-4 max-w-[680px] text-base leading-7 text-[#6b7280]">
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-[#6b7280]">
             Your personal shelf of meaningful connections. Browse, tend, and nurture the relationships that matter most.
           </p>
           <button
@@ -51,20 +63,54 @@ export default function Home() {
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-[20px] border border-[#e5e7eb] bg-[#f8fafc] p-6 text-center shadow-sm">
             <p className="text-xs uppercase tracking-[0.26em] text-[#6b7280]">Total Friends</p>
-            <p className="mt-4 text-3xl font-semibold text-[#111827]">10</p>
+            <p className="mt-4 text-3xl font-semibold text-[#111827]">{totalFriends}</p>
           </div>
           <div className="rounded-[20px] border border-[#e5e7eb] bg-[#effaf7] p-6 text-center shadow-sm">
             <p className="text-xs uppercase tracking-[0.26em] text-[#2f5346]">On Track</p>
-            <p className="mt-4 text-3xl font-semibold text-[#111827]">3</p>
+            <p className="mt-4 text-3xl font-semibold text-[#111827]">{onTrack}</p>
           </div>
           <div className="rounded-[20px] border border-[#e5e7eb] bg-[#fef3f2] p-6 text-center shadow-sm">
             <p className="text-xs uppercase tracking-[0.26em] text-[#b91c1c]">Need Attention</p>
-            <p className="mt-4 text-3xl font-semibold text-[#111827]">6</p>
+            <p className="mt-4 text-3xl font-semibold text-[#111827]">{needAttention}</p>
           </div>
           <div className="rounded-[20px] border border-[#e5e7eb] bg-[#eef2ff] p-6 text-center shadow-sm">
             <p className="text-xs uppercase tracking-[0.26em] text-[#3730a3]">Interactions This Month</p>
-            <p className="mt-4 text-3xl font-semibold text-[#111827]">12</p>
+            <p className="mt-4 text-3xl font-semibold text-[#111827]">{interactionsThisMonth}</p>
           </div>
+        </div>
+      </section>
+
+      <section className="mx-auto mt-10 max-w-5xl">
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-[#111827]">Your Friends</h2>
+        </div>
+
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {friends.map((friend) => (
+            <div key={friend.id} className="rounded-[26px] border border-[#e5e7eb] bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
+              <div className="flex flex-col items-center text-center">
+                <div className="relative h-20 w-20 overflow-hidden rounded-full bg-[#f3f4f6]">
+                  <img src={friend.picture} alt={friend.name} className="h-full w-full object-cover" />
+                </div>
+                <div className="mt-4">
+                  <p className="text-base font-semibold text-[#111827]">{friend.name}</p>
+                  <p className="mt-1 text-xs uppercase tracking-[0.24em] text-[#6b7280]">{friend.days_since_contact}d ago</p>
+                </div>
+                <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+                  {friend.tags.map((tag) => (
+                    <span key={tag} className="rounded-full bg-[#eff6ff] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1d4ed8]">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <span
+                  className={`mt-5 inline-flex rounded-full px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] ${statusStyles[friend.status]}`}
+                >
+                  {friend.status.replace("-", " ")}
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
     </main>
